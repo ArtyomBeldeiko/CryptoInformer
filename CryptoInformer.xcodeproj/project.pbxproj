@@ -16,6 +16,7 @@
 		397F3BA12900890F00D22DA7 /* CryptoTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 397F3BA02900890F00D22DA7 /* CryptoTableViewCell.swift */; };
 		397F3BA3290091AA00D22DA7 /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 397F3BA2290091AA00D22DA7 /* NetworkManager.swift */; };
 		397F3BA9290355BD00D22DA7 /* Currency.swift in Sources */ = {isa = PBXBuildFile; fileRef = 397F3BA8290355BD00D22DA7 /* Currency.swift */; };
+		397F3BAB290472E000D22DA7 /* UIColorExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 397F3BAA290472E000D22DA7 /* UIColorExtension.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -30,6 +31,7 @@
 		397F3BA02900890F00D22DA7 /* CryptoTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CryptoTableViewCell.swift; sourceTree = "<group>"; };
 		397F3BA2290091AA00D22DA7 /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
 		397F3BA8290355BD00D22DA7 /* Currency.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Currency.swift; sourceTree = "<group>"; };
+		397F3BAA290472E000D22DA7 /* UIColorExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIColorExtension.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -67,6 +69,7 @@
 				397F3B9928FF444A00D22DA7 /* Controllers */,
 				397F3B9A28FF4FD900D22DA7 /* Models */,
 				397F3B9F290088CC00D22DA7 /* Cells */,
+				397F3BAC290472EA00D22DA7 /* Extensions */,
 				397F3B9828FF43A900D22DA7 /* Resources */,
 			);
 			path = CryptoInformer;
@@ -122,6 +125,14 @@
 				397F3BA2290091AA00D22DA7 /* NetworkManager.swift */,
 			);
 			path = Managers;
+			sourceTree = "<group>";
+		};
+		397F3BAC290472EA00D22DA7 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				397F3BAA290472E000D22DA7 /* UIColorExtension.swift */,
+			);
+			path = Extensions;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -197,6 +208,7 @@
 				397F3BA3290091AA00D22DA7 /* NetworkManager.swift in Sources */,
 				397F3B8828FF3F9200D22DA7 /* ViewController.swift in Sources */,
 				397F3B9C28FF4FF100D22DA7 /* Rate.swift in Sources */,
+				397F3BAB290472E000D22DA7 /* UIColorExtension.swift in Sources */,
 				397F3B8428FF3F9200D22DA7 /* AppDelegate.swift in Sources */,
 				397F3BA12900890F00D22DA7 /* CryptoTableViewCell.swift in Sources */,
 				397F3BA9290355BD00D22DA7 /* Currency.swift in Sources */,

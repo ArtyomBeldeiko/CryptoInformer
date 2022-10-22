@@ -13,15 +13,15 @@ class CryptoTableViewCell: UITableViewCell {
     
     let cryptoLabel: UILabel = {
         let label = UILabel()
-        label.textColor = .black
-        label.font = UIFont(name: "Helvetica-Bold", size: 20)
+        label.textColor = .customBlue
+        label.font = UIFont(name: "Helvetica-Bold", size: 21)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
     let cryptoRate: UILabel = {
         let label = UILabel()
-        label.textColor = .black
+        label.textColor = .customBlue
         label.font = UIFont(name: "Helvetica-Bold", size: 20)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -29,9 +29,9 @@ class CryptoTableViewCell: UITableViewCell {
     
     let favouriteButton: UIButton = {
         let button = UIButton()
-        let image = UIImage(systemName: "star.fill", withConfiguration: UIImage.SymbolConfiguration(pointSize: 25))
+        let image = UIImage(systemName: "star.fill", withConfiguration: UIImage.SymbolConfiguration(pointSize: 20))
         button.setImage(image, for: .normal)
-        button.tintColor = .lightGray
+        button.tintColor = .customGray
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
@@ -48,7 +48,7 @@ class CryptoTableViewCell: UITableViewCell {
     
     private func setConstraints() {
         let cryptoLabelConstraints = [
-            cryptoLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 12),
+            cryptoLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
             cryptoLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor)
         ]
         

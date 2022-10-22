@@ -21,8 +21,9 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         
         view.backgroundColor = .white
-        
         view.addSubview(cryptoTable)
+        
+        navigationBarConfiguration()
         
         cryptoTable.delegate = self
         cryptoTable.dataSource = self
@@ -49,6 +50,23 @@ class ViewController: UIViewController {
         super.viewDidLayoutSubviews()
         cryptoTable.frame = view.bounds
     }
+    
+    private func navigationBarConfiguration() {
+        let leftItemImage = UIImage(systemName: "star.circle.fill",withConfiguration: UIImage.SymbolConfiguration(pointSize: 30, weight: .regular, scale: .default))
+        let rightItemImage = UIImage(systemName: "magnifyingglass.circle.fill",withConfiguration: UIImage.SymbolConfiguration(pointSize: 30, weight: .regular, scale: .default))
+        let leftBarItem = UIBarButtonItem(image: leftItemImage, style: .done, target: self, action: nil)
+        let rightBarItem = UIBarButtonItem(image: rightItemImage, style: .done, target: self, action: nil)
+        navigationItem.leftBarButtonItem = leftBarItem
+        navigationItem.rightBarButtonItem = rightBarItem
+        leftBarItem.tintColor = .customGray
+        rightBarItem.tintColor = .customGray
+        let appearance = UINavigationBarAppearance()
+        appearance.configureWithOpaqueBackground()
+        appearance.backgroundColor = .customBlue
+        navigationController?.navigationBar.standardAppearance = appearance;
+        navigationController?.navigationBar.scrollEdgeAppearance = navigationController?.navigationBar.standardAppearance
+    }
+
 }
 
 // MARK: UITableViewDelegate, UITableViewDataSource
@@ -67,6 +85,10 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
         cell.cryptoRate.text = String(currency.rate)
         
         return cell
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 70
     }
 }
 
