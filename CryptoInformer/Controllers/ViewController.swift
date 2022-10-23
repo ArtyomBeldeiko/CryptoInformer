@@ -11,6 +11,12 @@ class ViewController: UIViewController {
     
     var currencies = [Currency]()
     
+    let refreshControl: UIRefreshControl = {
+        let refreshControl = UIRefreshControl()
+        refreshControl.addTarget(self, action: #selector(tableUpdate), for: .valueChanged)
+        return refreshControl
+    }()
+    
     private let cryptoTable: UITableView = {
         let table = UITableView()
         table.register(CryptoTableViewCell.self, forCellReuseIdentifier: CryptoTableViewCell.identifier)
@@ -23,27 +29,15 @@ class ViewController: UIViewController {
         view.backgroundColor = .white
         view.addSubview(cryptoTable)
         
+        
         navigationBarConfiguration()
         
         cryptoTable.delegate = self
         cryptoTable.dataSource = self
+        cryptoTable.refreshControl = refreshControl
+        cryptoTable.separatorColor = .customGray
         
-        NetworkManager.shared.getRates { result in
-            switch result {
-            case .success(let rate):
-                for (key, value) in rate.rates {
-                    let currency = Currency(currencyName: key, rate: value)
-                    self.currencies.append(currency)
-                }
-                
-                DispatchQueue.main.async {
-                    self.cryptoTable.reloadData()
-                }
-                
-            case .failure(let error):
-                print(error.localizedDescription)
-            }
-        }
+        fetchRequest()
     }
     
     override func viewDidLayoutSubviews() {
@@ -65,6 +59,31 @@ class ViewController: UIViewController {
         appearance.backgroundColor = .customBlue
         navigationController?.navigationBar.standardAppearance = appearance;
         navigationController?.navigationBar.scrollEdgeAppearance = navigationController?.navigationBar.standardAppearance
+    }
+    
+    private func fetchRequest() {
+        NetworkManager.shared.getRates { result in
+            switch result {
+            case .success(let rate):
+                for (key, value) in rate.rates {
+                    let currency = Currency(currencyName: key, rate: value)
+                    self.currencies.append(currency)
+                }
+                
+                DispatchQueue.main.async {
+                    self.cryptoTable.reloadData()
+                }
+                
+            case .failure(let error):
+                print(error.localizedDescription)
+            }
+        }
+    }
+    
+    @objc private func tableUpdate(sender: UIRefreshControl) {
+        currencies.removeAll()
+        fetchRequest()
+        sender.endRefreshing()
     }
 
 }
