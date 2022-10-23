@@ -9,9 +9,12 @@ import UIKit
 
 class ViewController: UIViewController {
     
-    var currencies = [Currency]()
+    private var currencies = [Currency]()
+    private var filteredCurrencies = [Currency]()
     
-    let refreshControl: UIRefreshControl = {
+//    MARK: RefreshControl
+    
+    private let refreshControl: UIRefreshControl = {
         let refreshControl = UIRefreshControl()
         refreshControl.addTarget(self, action: #selector(tableUpdate), for: .valueChanged)
         return refreshControl
@@ -22,15 +25,28 @@ class ViewController: UIViewController {
         table.register(CryptoTableViewCell.self, forCellReuseIdentifier: CryptoTableViewCell.identifier)
         return table
     }()
-
+    
+//    MARK: SearchBar
+    
+    private let searchController = UISearchController(searchResultsController: nil)
+    
+    private var searchBarIsEmpty: Bool {
+        guard let text = searchController.searchBar.text else { return false }
+        return text.isEmpty
+    }
+    
+    private var isFiltering: Bool {
+        return searchController.isActive && !searchBarIsEmpty
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         view.backgroundColor = .white
         view.addSubview(cryptoTable)
         
-        
         navigationBarConfiguration()
+        searchBarConfiguration()
         
         cryptoTable.delegate = self
         cryptoTable.dataSource = self
@@ -45,21 +61,30 @@ class ViewController: UIViewController {
         cryptoTable.frame = view.bounds
     }
     
+//    MARK: NavigationBarConfiguration
+    
     private func navigationBarConfiguration() {
-        let leftItemImage = UIImage(systemName: "star.circle.fill",withConfiguration: UIImage.SymbolConfiguration(pointSize: 30, weight: .regular, scale: .default))
-        let rightItemImage = UIImage(systemName: "magnifyingglass.circle.fill",withConfiguration: UIImage.SymbolConfiguration(pointSize: 30, weight: .regular, scale: .default))
-        let leftBarItem = UIBarButtonItem(image: leftItemImage, style: .done, target: self, action: nil)
-        let rightBarItem = UIBarButtonItem(image: rightItemImage, style: .done, target: self, action: nil)
-        navigationItem.leftBarButtonItem = leftBarItem
-        navigationItem.rightBarButtonItem = rightBarItem
-        leftBarItem.tintColor = .customGray
-        rightBarItem.tintColor = .customGray
         let appearance = UINavigationBarAppearance()
         appearance.configureWithOpaqueBackground()
         appearance.backgroundColor = .customBlue
         navigationController?.navigationBar.standardAppearance = appearance;
         navigationController?.navigationBar.scrollEdgeAppearance = navigationController?.navigationBar.standardAppearance
     }
+    
+//    MARK: SearchBarConfiguration
+    
+    private func searchBarConfiguration() {
+        searchController.searchResultsUpdater = self
+        searchController.obscuresBackgroundDuringPresentation = false
+        searchController.searchBar.placeholder = "Search"
+        navigationItem.searchController = searchController
+        searchController.searchBar.barTintColor = .customGray
+        searchController.searchBar.tintColor = .customGray
+        searchController.searchBar.searchTextField.textColor = .customGray
+        definesPresentationContext = true
+    }
+    
+//    MARK: FetchRequest
     
     private func fetchRequest() {
         NetworkManager.shared.getRates { result in
@@ -85,20 +110,29 @@ class ViewController: UIViewController {
         fetchRequest()
         sender.endRefreshing()
     }
-
+    
 }
 
 // MARK: UITableViewDelegate, UITableViewDataSource
 
 extension ViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        currencies.count
+        if isFiltering {
+            return filteredCurrencies.count
+        }
+        return currencies.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: CryptoTableViewCell.identifier, for: indexPath) as? CryptoTableViewCell else { return UITableViewCell()}
         
-        let currency = currencies[indexPath.row]
+        var currency: Currency
+        
+        if isFiltering {
+            currency = filteredCurrencies[indexPath.row]
+        } else {
+            currency = currencies[indexPath.row]
+        }
         
         cell.cryptoLabel.text = currency.currencyName
         cell.cryptoRate.text = String(currency.rate)
@@ -108,6 +142,24 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 70
+    }
+}
+
+// MARK: UISearchResultsUpdating
+
+extension ViewController: UISearchResultsUpdating {
+    
+    func updateSearchResults(for searchController: UISearchController) {
+        filterContentForSearchText(searchController.searchBar.text!)
+    }
+    
+    private func filterContentForSearchText(_ searchText: String) {
+        
+        filteredCurrencies = currencies.filter({ (currency: Currency) -> Bool in
+            return currency.currencyName.lowercased().contains(searchText.lowercased())
+        })
+        
+        cryptoTable.reloadData()
     }
 }
 
